@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import { ERC5192 } from "./base/ERC5192.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import { Base64 } from "./libraries/Base64.sol";
@@ -19,10 +20,6 @@ contract SimpleSBT is ERC5192 {
         _tokenIds.increment();
         console.log('SimpleSBT contract deployed.');
     }
-
-    // function supportsInterface(bytes4 interfaceId) public view virtual override (ERC5192) returns (bool) {
-    //     return super.supportsInterface(interfaceId);
-    // }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "tokenURI: token doesn't exist");
