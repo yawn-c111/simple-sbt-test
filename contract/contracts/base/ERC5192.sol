@@ -38,6 +38,9 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
+    // Mapping from tokenID to acount lock;
+    mapping(uint256 => bool) private _accountLock;
+
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
@@ -57,13 +60,14 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         returns (bool)
     {
         return
+            interfaceId == 0xb45a3c0e ||
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
             super.supportsInterface(interfaceId);
     }
 
-    function locked(uint256 tokenId) external view returns (bool) {
-        return false;
+    function locked(uint256 tokenId) external view override returns (bool) {
+        return _accountLock[tokenId];
     }
 
     /**
@@ -144,6 +148,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
      * @dev See {IERC721-approve}.
      */
     function approve(address to, uint256 tokenId) public virtual override {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         address owner = ERC5192.ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
@@ -165,6 +170,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         override
         returns (address)
     {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         _requireMinted(tokenId);
 
         return _tokenApprovals[tokenId];
@@ -203,6 +209,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         uint256 tokenId
     ) public virtual override {
         //solhint-disable-next-line max-line-length
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: caller is not token owner or approved"
@@ -219,6 +226,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         address to,
         uint256 tokenId
     ) public virtual override {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         safeTransferFrom(from, to, tokenId, "");
     }
 
@@ -231,6 +239,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         uint256 tokenId,
         bytes memory data
     ) public virtual override {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: caller is not token owner or approved"
@@ -262,6 +271,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         uint256 tokenId,
         bytes memory data
     ) internal virtual {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         _transfer(from, to, tokenId);
         require(
             _checkOnERC721Received(from, to, tokenId, data),
@@ -350,6 +360,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
 
         _balances[to] += 1;
         _owners[tokenId] = to;
+        _accountLock[tokenId] = false;
 
         emit Transfer(address(0), to, tokenId);
 
@@ -399,6 +410,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         address to,
         uint256 tokenId
     ) internal virtual {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         require(
             ERC5192.ownerOf(tokenId) == from,
             "ERC721: transfer from incorrect owner"
@@ -425,6 +437,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
      * Emits an {Approval} event.
      */
     function _approve(address to, uint256 tokenId) internal virtual {
+        require(_accountLock[tokenId], "SBT transfers are locked.");
         _tokenApprovals[tokenId] = to;
         emit Approval(ERC5192.ownerOf(tokenId), to, tokenId);
     }

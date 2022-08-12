@@ -44,9 +44,15 @@ contract SimpleSBT is ERC5192 {
     }
 
     function mintSBT() external {
+        require(balanceOf(_msgSender()) == 0, "You have already owned SBT.");
         uint256 newTokenID = _tokenIds.current();
         _mint(_msgSender(), newTokenID);
         _tokenIds.increment();
 	    console.log("SBT #%s has been minted by %s", newTokenID, _msgSender());
+    }
+
+    function burnSBT(uint256 _tokenId) external {
+        require(ownerOf(_tokenId) == _msgSender(), "burn: sender must be owner");
+        _burn(_tokenId);
     }
 }
