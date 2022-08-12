@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import { ERC5192 } from "./base/ERC5192.sol";
+import { ISimpleData } from "./interfaces/ISimpleData.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -11,12 +12,15 @@ import "hardhat/console.sol";
 
 contract SimpleSBT is ERC5192 {
 
+    ISimpleData public SimpleData;
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
     mapping(uint256 => string) private _tokenURIs;
 
-    constructor() ERC5192('SimpleSBT', 'SSBT') {
+    constructor(ISimpleData _simpleDataAddress) ERC5192('SimpleSBT', 'SSBT') {
+        SimpleData = _simpleDataAddress;
         _tokenIds.increment();
         console.log('SimpleSBT contract deployed.');
     }
