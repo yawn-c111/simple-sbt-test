@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.0;
 
 interface IERC5192 {
     /// @notice Returns the locking status of an Soulbound Token

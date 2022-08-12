@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.0;
 
 import {IERC5192} from "./IERC5192.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -144,7 +144,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
      * @dev See {IERC721-approve}.
      */
     function approve(address to, uint256 tokenId) public virtual override {
-        address owner = ERC721.ownerOf(tokenId);
+        address owner = ERC5192.ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
         require(
@@ -294,7 +294,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         virtual
         returns (bool)
     {
-        address owner = ERC721.ownerOf(tokenId);
+        address owner = ERC5192.ownerOf(tokenId);
         return (spender == owner ||
             isApprovedForAll(owner, spender) ||
             getApproved(tokenId) == spender);
@@ -368,7 +368,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
      * Emits a {Transfer} event.
      */
     function _burn(uint256 tokenId) internal virtual {
-        address owner = ERC721.ownerOf(tokenId);
+        address owner = ERC5192.ownerOf(tokenId);
 
         _beforeTokenTransfer(owner, address(0), tokenId);
 
@@ -400,7 +400,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
         uint256 tokenId
     ) internal virtual {
         require(
-            ERC721.ownerOf(tokenId) == from,
+            ERC5192.ownerOf(tokenId) == from,
             "ERC721: transfer from incorrect owner"
         );
         require(to != address(0), "ERC721: transfer to the zero address");
@@ -426,7 +426,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
      */
     function _approve(address to, uint256 tokenId) internal virtual {
         _tokenApprovals[tokenId] = to;
-        emit Approval(ERC721.ownerOf(tokenId), to, tokenId);
+        emit Approval(ERC5192.ownerOf(tokenId), to, tokenId);
     }
 
     /**
