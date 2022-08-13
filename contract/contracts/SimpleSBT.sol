@@ -25,7 +25,7 @@ contract SimpleSBT is ERC5192 {
         console.log('SimpleSBT contract deployed.');
     }
 
-    function ageClass(address _address) private returns (string memory) {
+    function ageClass(address _address) private view returns (string memory) {
         uint8 _ageClass = SimpleData.readAge(_address);
 
         if (_ageClass < 18) {
@@ -33,7 +33,7 @@ contract SimpleSBT is ERC5192 {
         } else if (_ageClass < 20) {
             return "yellow";
         } else if (_ageClass < 25) {
-            return "pink";
+            return "orange";
         } else if (_ageClass < 30) {
             return "red";
         } else {
@@ -46,7 +46,7 @@ contract SimpleSBT is ERC5192 {
         
         string memory imageJson = Base64.encode(
   		    abi.encodePacked(
-                '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base {fill: black; font-family: serif; font-size: 22px;}</style><rect width="100%" height="100%" fill="white" /><text x="50%" y="50%" class="base" dominant-baseline="middle" text-anchor="middle">SimpleSBT #', Strings.toString(tokenId),'</text></svg>'
+                '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base {fill: black; font-family: serif; font-size: 22px;}</style><rect width="100%" height="100%" fill="', abi.encodePacked(ageClass(ownerOf(tokenId))),'" /><text x="50%" y="50%" class="base" dominant-baseline="middle" text-anchor="middle">SimpleSBT #', Strings.toString(tokenId),'</text></svg>'
             )
 	    );
         string memory json = Base64.encode(

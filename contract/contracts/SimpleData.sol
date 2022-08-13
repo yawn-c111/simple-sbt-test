@@ -2,11 +2,11 @@
 pragma solidity ^0.8.9;
 
 import { ISimpleData } from "./interfaces/ISimpleData.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 
 import "hardhat/console.sol";
 
-contract SimpleData is Ownable {
+contract SimpleData is Context {
 
     mapping (address => uint8) private age;
 
@@ -15,11 +15,12 @@ contract SimpleData is Ownable {
     }
 
     function writeAge(uint8 _age) public {
+        require(_msgSender() == tx.origin, "You cannot write other people's ages.");
         age[_msgSender()] = _age;
     }
 
     function readAge(address _address) public view returns (uint8) {
-        require(_address == _msgSender(), "You cannot read other people's ages.");
+        // require(tx.origin == _address, "You cannot read other people's ages.");
         return age[_address];
     }
 }

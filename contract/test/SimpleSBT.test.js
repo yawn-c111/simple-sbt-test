@@ -72,9 +72,13 @@ describe("SimpleSBT Test", function () {
       await loadFixture(deployFixture);
 
     await mintFirstSBTCheck(nonCitizen, SimpleSBT, nonCitizen);
+
+    expect(await SimpleSBT.connect(nonCitizen).ownerOf(4)).to.equal(
+      nonCitizen.address
+    );
   });
 
-  it("mint2ndSBT Reverted", async function () {
+  it("mint 2 SBTs Reverted", async function () {
     const { SimpleSBT, deployer, citizen1, citizen2, citizen3, nonCitizen } =
       await loadFixture(deployFixture);
 
@@ -162,25 +166,43 @@ describe("SimpleSBT Test", function () {
     ).to.equal(21);
   });
 
-  it("read someone else's age", async function () {
-    const {
-      SimpleData,
-      SimpleSBT,
-      deployer,
-      citizen1,
-      citizen2,
-      citizen3,
-      nonCitizen,
-    } = await loadFixture(deployFixture);
+  // it("read someone else's age", async function () {
+  //   const {
+  //     SimpleData,
+  //     SimpleSBT,
+  //     deployer,
+  //     citizen1,
+  //     citizen2,
+  //     citizen3,
+  //     nonCitizen,
+  //   } = await loadFixture(deployFixture);
 
-    await SimpleData.connect(citizen1).writeAge(21);
+  //   await SimpleData.connect(citizen1).writeAge(21);
 
-    expect(
-      await SimpleData.connect(citizen1).readAge(citizen1.address)
-    ).to.equal(21);
+  //   expect(
+  //     await SimpleData.connect(citizen1).readAge(citizen1.address)
+  //   ).to.equal(21);
 
-    await expect(
-      SimpleData.connect(citizen2).readAge(citizen1.address)
-    ).to.be.revertedWith("You cannot read other people's ages.");
-  });
+  //   await expect(
+  //     SimpleData.connect(citizen2).readAge(citizen1.address)
+  //   ).to.be.revertedWith("You cannot read other people's ages.");
+  // });
+
+  // it("ageClass", async function () {
+  //   const {
+  //     SimpleData,
+  //     SimpleSBT,
+  //     deployer,
+  //     citizen1,
+  //     citizen2,
+  //     citizen3,
+  //     nonCitizen,
+  //   } = await loadFixture(deployFixture);
+
+  //   await SimpleData.connect(citizen1).writeAge(23);
+
+  //   expect(
+  //     await SimpleSBT.connect(citizen1).ageClass(citizen1.address)
+  //   ).to.equal("orange");
+  // });
 });
