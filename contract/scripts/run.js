@@ -11,6 +11,8 @@ const main = async () => {
   const SimpleSBT = await SimpleSBTFactory.deploy(SimpleData.address);
   await SimpleSBT.deployed();
   console.log("SimpleSBT contract deployed to ", SimpleSBT.address);
+
+  await (await SimpleSBT.mintSBT()).wait();
 };
 
 const runMain = async () => {

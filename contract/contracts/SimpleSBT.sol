@@ -25,6 +25,22 @@ contract SimpleSBT is ERC5192 {
         console.log('SimpleSBT contract deployed.');
     }
 
+    function ageClass(address _address) private returns (string memory) {
+        uint8 _ageClass = SimpleData.readAge(_address);
+
+        if (_ageClass < 18) {
+            return "white";
+        } else if (_ageClass < 20) {
+            return "yellow";
+        } else if (_ageClass < 25) {
+            return "pink";
+        } else if (_ageClass < 30) {
+            return "red";
+        } else {
+            return "purple";
+        }
+    }
+
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "tokenURI: token doesn't exist");
         
