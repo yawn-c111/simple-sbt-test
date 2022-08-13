@@ -5,7 +5,8 @@ import "hardhat/console.sol";
 
 interface ISimpleData {
 
-    function getCharity(address _address) external view returns (uint256);
+    function writeAge(uint8 _age) external;
 
-    function getContribution(address _address) external view returns (uint256);
+    function readAge(address _address) external view returns (uint8);
+
 }

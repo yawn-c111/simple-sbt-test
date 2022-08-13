@@ -8,15 +8,18 @@ import "hardhat/console.sol";
 
 contract SimpleData is Ownable {
 
+    mapping (address => uint8) private age;
+
     constructor() {
         console.log('SimpleData.sol deployed.');
     }
 
-    function getCharity(address _address) public returns (uint256) {
-        return 1;
+    function writeAge(uint8 _age) public {
+        age[_msgSender()] = _age;
     }
 
-    function getContribution(address _address) public returns (uint256) {
-        return 2;
+    function readAge(address _address) public view returns (uint8) {
+        require(_address == _msgSender(), "You cannot read other people's ages.");
+        return age[_address];
     }
 }

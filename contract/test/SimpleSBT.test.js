@@ -12,8 +12,12 @@ describe("SimpleSBT Test", function () {
     const [deployer, citizen1, citizen2, citizen3, nonCitizen] =
       await hre.ethers.getSigners();
 
+    const SimpleDataFactory = await hre.ethers.getContractFactory("SimpleData");
+    const SimpleData = await SimpleDataFactory.deploy();
+    await SimpleData.deployed();
+
     const SimpleSBTFactory = await hre.ethers.getContractFactory("SimpleSBT");
-    const SimpleSBT = await SimpleSBTFactory.deploy();
+    const SimpleSBT = await SimpleSBTFactory.deploy(SimpleData.address);
     await SimpleSBT.deployed();
 
     await mintFirstSBTCheck(citizen1, SimpleSBT, citizen1);
@@ -21,6 +25,7 @@ describe("SimpleSBT Test", function () {
     await mintFirstSBTCheck(citizen3, SimpleSBT, citizen3);
 
     return {
+      SimpleData,
       SimpleSBT,
       deployer,
       citizen1,
@@ -137,5 +142,45 @@ describe("SimpleSBT Test", function () {
     expect(
       await SimpleSBT.connect(nonCitizen).balanceOf(citizen1.address)
     ).to.equal(1);
+  });
+
+  it("own age", async function () {
+    const {
+      SimpleData,
+      SimpleSBT,
+      deployer,
+      citizen1,
+      citizen2,
+      citizen3,
+      nonCitizen,
+    } = await loadFixture(deployFixture);
+
+    await SimpleData.connect(citizen1).writeAge(21);
+
+    expect(
+      await SimpleData.connect(citizen1).readAge(citizen1.address)
+    ).to.equal(21);
+  });
+
+  it("read someone else's age", async function () {
+    const {
+      SimpleData,
+      SimpleSBT,
+      deployer,
+      citizen1,
+      citizen2,
+      citizen3,
+      nonCitizen,
+    } = await loadFixture(deployFixture);
+
+    await SimpleData.connect(citizen1).writeAge(21);
+
+    expect(
+      await SimpleData.connect(citizen1).readAge(citizen1.address)
+    ).to.equal(21);
+
+    await expect(
+      SimpleData.connect(citizen2).readAge(citizen1.address)
+    ).to.be.revertedWith("You cannot read other people's ages.");
   });
 });
