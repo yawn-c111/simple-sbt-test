@@ -13,6 +13,8 @@ const main = async () => {
   console.log("SimpleSBT contract deployed to ", SimpleSBT.address);
 
   await (await SimpleSBT.mintSBT()).wait();
+
+  await (await SimpleData.transferOwnership(SimpleSBT.address)).wait();
 };
 
 const runMain = async () => {

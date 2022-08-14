@@ -24,6 +24,8 @@ describe("SimpleSBT Test", function () {
     await mintFirstSBTCheck(citizen2, SimpleSBT, citizen2);
     await mintFirstSBTCheck(citizen3, SimpleSBT, citizen3);
 
+    await SimpleData.transferOwnership(SimpleSBT.address);
+
     return {
       SimpleData,
       SimpleSBT,
@@ -65,6 +67,30 @@ describe("SimpleSBT Test", function () {
     expect(
       await SimpleSBT.connect(nonCitizen).balanceOf(nonCitizen.address)
     ).to.equal(0);
+  });
+
+  it("tokenID check", async function () {
+    const {
+      SimpleData,
+      SimpleSBT,
+      deployer,
+      citizen1,
+      citizen2,
+      citizen3,
+      nonCitizen,
+    } = await loadFixture(deployFixture);
+
+    expect(await SimpleSBT.connect(nonCitizen).ownerOf(1)).to.equal(
+      citizen1.address
+    );
+
+    expect(await SimpleSBT.connect(nonCitizen).ownerOf(2)).to.equal(
+      citizen2.address
+    );
+
+    expect(await SimpleSBT.connect(nonCitizen).ownerOf(3)).to.equal(
+      citizen3.address
+    );
   });
 
   it("mintSBT", async function () {
@@ -148,23 +174,23 @@ describe("SimpleSBT Test", function () {
     ).to.equal(1);
   });
 
-  it("own age", async function () {
-    const {
-      SimpleData,
-      SimpleSBT,
-      deployer,
-      citizen1,
-      citizen2,
-      citizen3,
-      nonCitizen,
-    } = await loadFixture(deployFixture);
+  // it("own age", async function () {
+  //   const {
+  //     SimpleData,
+  //     SimpleSBT,
+  //     deployer,
+  //     citizen1,
+  //     citizen2,
+  //     citizen3,
+  //     nonCitizen,
+  //   } = await loadFixture(deployFixture);
 
-    await SimpleData.connect(citizen1).writeAge(21);
+  //   await SimpleData.connect(citizen1).writeAge(21);
 
-    expect(
-      await SimpleData.connect(citizen1).readAge(citizen1.address)
-    ).to.equal(21);
-  });
+  //   expect(
+  //     await SimpleData.connect(citizen1).readAge(citizen1.address)
+  //   ).to.equal(21);
+  // });
 
   // it("read someone else's age", async function () {
   //   const {

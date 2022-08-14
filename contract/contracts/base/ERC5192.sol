@@ -67,6 +67,7 @@ contract ERC5192 is Context, ERC165, IERC721, IERC721Metadata, IERC5192 {
     }
 
     function locked(uint256 tokenId) external view override returns (bool) {
+        require(_exists(tokenId), "invalid token ID");
         return _accountLock[tokenId];
     }
 
