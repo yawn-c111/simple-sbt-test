@@ -174,6 +174,43 @@ describe("SimpleSBT Test", function () {
     ).to.equal(1);
   });
 
+  it("ageClass", async function () {
+    const {
+      SimpleSBT,
+      SimpleData,
+      deployer,
+      citizen1,
+      citizen2,
+      citizen3,
+      nonCitizen,
+    } = await loadFixture(deployFixture);
+
+    await SimpleData.connect(citizen1).writeAge(10);
+    expect(
+      await SimpleSBT.connect(nonCitizen).ageClass(citizen1.address)
+    ).to.equal("white");
+
+    await SimpleData.connect(citizen1).writeAge(19);
+    expect(
+      await SimpleSBT.connect(nonCitizen).ageClass(citizen1.address)
+    ).to.equal("yellow");
+
+    await SimpleData.connect(citizen1).writeAge(23);
+    expect(
+      await SimpleSBT.connect(nonCitizen).ageClass(citizen1.address)
+    ).to.equal("orange");
+
+    await SimpleData.connect(citizen1).writeAge(27);
+    expect(
+      await SimpleSBT.connect(nonCitizen).ageClass(citizen1.address)
+    ).to.equal("red");
+
+    await SimpleData.connect(citizen1).writeAge(32);
+    expect(
+      await SimpleSBT.connect(nonCitizen).ageClass(citizen1.address)
+    ).to.equal("purple");
+  });
+
   // it("own age", async function () {
   //   const {
   //     SimpleData,
