@@ -5,8 +5,12 @@ import "hardhat/console.sol";
 
 interface ISimpleData {
 
-    function writeAge(uint8 _age) external;
+    function writeName(string calldata name) external;
 
-    function readAge(address _address) external view returns (uint8);
+    function readName(address owner) external view returns (string memory);
+
+    function writeAge(uint8 age) external;
+
+    function readAge(address owner) external view returns (uint8);
 
 }

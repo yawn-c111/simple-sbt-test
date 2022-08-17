@@ -25,8 +25,12 @@ contract SimpleSBT is ERC5192 {
         console.log('SimpleSBT contract deployed.');
     }
 
-    function ageClass(address _address) public view returns (string memory) {
-        uint8 _ageClass = SimpleData.readAge(_address);
+    function nameInitial(address owner) public view returns (string memory) {
+        return SimpleData.readName(owner);
+    }
+
+    function ageClass(address owner) public view returns (string memory) {
+        uint8 _ageClass = SimpleData.readAge(owner);
 
         if (_ageClass < 18) {
             return "white";

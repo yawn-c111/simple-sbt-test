@@ -9,18 +9,28 @@ import "hardhat/console.sol";
 
 contract SimpleData is Context, Ownable {
 
-    mapping (address => uint8) private age;
+    mapping (address => uint8) private _age;
+    mapping (address => string) private _name;
 
     constructor() {
         console.log('SimpleData.sol deployed.');
     }
 
-    function writeAge(uint8 _age) public {
-        require(_msgSender() == tx.origin, "You cannot write other people's ages.");
-        age[_msgSender()] = _age;
+    function writeName(string calldata name) public {
+        require(msg.sender == tx.origin, "You cannot write other people's ages.");
+        _name[_msgSender()] = name;
     }
 
-    function readAge(address _address) public view onlyOwner returns (uint8) {
-        return age[_address];
+    function readName(address owner) public view onlyOwner returns (string memory) {
+        return _name[owner];
+    }
+
+    function writeAge(uint8 age) public {
+        require(msg.sender == tx.origin, "You cannot write other people's ages.");
+        _age[_msgSender()] = age;
+    }
+
+    function readAge(address owner) public view onlyOwner returns (uint8) {
+        return _age[owner];
     }
 }
