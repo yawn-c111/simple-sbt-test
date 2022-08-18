@@ -16,15 +16,6 @@ contract SimpleData is Context, Ownable {
         console.log('SimpleData.sol deployed.');
     }
 
-    function writeName(string calldata name) public {
-        require(msg.sender == tx.origin, "You cannot write other people's ages.");
-        _name[_msgSender()] = name;
-    }
-
-    function readName(address owner) public view onlyOwner returns (string memory) {
-        return _name[owner];
-    }
-
     function writeAge(uint8 age) public {
         require(msg.sender == tx.origin, "You cannot write other people's ages.");
         _age[_msgSender()] = age;
