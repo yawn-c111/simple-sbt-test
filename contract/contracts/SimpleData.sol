@@ -10,7 +10,6 @@ import "hardhat/console.sol";
 contract SimpleData is Context, Ownable {
 
     mapping (address => uint8) private _age;
-    mapping (address => string) private _name;
 
     constructor() {
         console.log('SimpleData.sol deployed.');
